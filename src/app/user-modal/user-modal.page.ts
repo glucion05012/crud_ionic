@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
+import { User, UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-user-modal',
@@ -6,10 +9,39 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-modal.page.scss'],
 })
 export class UserModalPage implements OnInit {
+  @Input() user: User;
+  isUpdate = false;
 
-  constructor() { }
+  data={
+    name:'',
+    email:'',
+    password:''
+  };
+
+  constructor(private modalCtrl: ModalController, private service: UserService) { }
 
   ngOnInit() {
+    if (this.user){
+      this.isUpdate=true;
+      this.data=this.user;
+    }
   }
 
+  onSubmit(form: NgForm){
+    const user = form.value;
+    if(this.isUpdate){
+      this.service.update(user, this.user.id).subscribe(()=>{
+        user.id = this.user.id;
+        this.modalCtrl.dismiss(user, 'updated')
+      });
+    }else{
+      this.service.create(user).subscribe(response=>{
+        this.modalCtrl.dismiss(response, 'created')
+      });
+    }
+  }
+
+  closeModal(){
+    this.modalCtrl.dismiss(null, 'closed');
+  }
 }

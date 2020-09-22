@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { User, UserService } from '../services/user.service';
+import { UserModalPage } from '../user-modal/user-modal.page';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,11 @@ export class HomePage implements OnInit{
 
   users: User[];
 
-  constructor(private service: UserService, private alertCtrl: AlertController) {}
+  constructor(
+    private service: UserService, 
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController
+  ) {}
 
   ngOnInit(){
     this.service.getAll().subscribe(response=>{
@@ -34,5 +39,35 @@ export class HomePage implements OnInit{
     ]
     }).then(alertEl => alertEl.present());
     
+  }
+
+  addUser(){
+    this.modalCtrl.create({
+      component: UserModalPage
+    }).then(modal => {
+      modal.present();
+      return modal.onDidDismiss();
+    }).then(({data, role}) => {
+      if(role === 'created'){
+        this.users.push(data);
+      }
+    });
+  }
+
+  editUser(user: User){
+    this.modalCtrl.create({
+      component: UserModalPage,
+      componentProps: {user}
+    }).then(modal=>{
+      modal.present();
+      return modal.onDidDismiss();
+    }).then(({data, role})=>{
+      this.users = this.users.filter(usr=>{
+        if(data.id === usr.id){
+          return data;
+        }
+        return usr;
+      });
+    });
   }
 }

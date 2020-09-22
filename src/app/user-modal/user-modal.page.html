@@ -1,9 +1,34 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>user-modal</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="closeModal()">
+        close
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ isUpdate ? 'Update' : 'Add'}} User</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content class="ion-padding">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <ion-item>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input [(ngModel)]="data.name" name="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input [(ngModel)]="data.email" name="email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input [(ngModel)]="data.password" name="password" type="password"></ion-input>
+    </ion-item>
+    <ion-button 
+      fill="outline" 
+      expand="block" 
+      color="primary" 
+      class="ion-margin-top"
+      type="submit"
+      >{{ isUpdate ? 'Update' : 'Save'}}</ion-button>
+  </form>
 </ion-content>

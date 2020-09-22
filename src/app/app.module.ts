@@ -10,10 +10,11 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { UserModalPage } from './user-modal/user-modal.page';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, UserModalPage],
+  entryComponents: [UserModalPage],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 
